@@ -1,6 +1,7 @@
 import { createTheme } from '@rneui/themed';
 
 export const Colors = {
+  Border: 'rgba(22, 18, 63, .1)',
   LightLime: '#abd699',
   FreshLemon: '#FFE26A',
   Teal: '#75c9b7',
@@ -29,6 +30,10 @@ const theme = createTheme({
     ListItem: {
       containerStyle: {
         borderRadius: 4,
+        borderColor: Colors.Border,
+        borderWidth: 1,
+        backgroundColor: 'transparent',
+        marginVertical: 8,
       },
     },
     Card: {
@@ -45,7 +50,7 @@ const theme = createTheme({
     },
     ListItemTitle: {
       style: {
-        fontSize: 30,
+        fontSize: 20,
         fontWeight: 'bold',
         fontFamily: 'Play-Bold',
         textTransform: 'capitalize',
@@ -53,7 +58,7 @@ const theme = createTheme({
     },
     ListItemSubtitle: {
       style: {
-        fontSize: 25,
+        fontSize: 16,
         fontStyle: 'italic',
         fontFamily: 'EduTASBeginner-SemiBold',
       },

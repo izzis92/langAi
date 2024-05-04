@@ -11,7 +11,7 @@ function AnimText({text, TextComp, ...props}) {
         if (i > text.length) {
           clearInterval(interval);
         }
-      }, 100);
+      }, 50);
     } else {
       setDisplayText('');
     }

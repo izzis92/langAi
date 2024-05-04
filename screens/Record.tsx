@@ -28,19 +28,7 @@ import {
 import {audioToText, textToAudio} from '../helpers/ai';
 import RNFetchBlob from 'rn-fetch-blob';
 import AnimText from '../components/Text/animText';
-
-const langMap = {
-  en: 'English',
-  es: 'Spanish',
-  fr: 'French',
-  de: 'German',
-  it: 'Italian',
-  pt: 'Portuguese',
-  ru: 'Russian',
-  zh: 'Chinese',
-  ja: 'Japanese',
-  ko: 'Korean',
-};
+import {langMap} from '../helpers/constants';
 
 type Props = {
   navigation: NativeStackNavigationProp<MainStackParams, 'Home'>;
@@ -86,8 +74,8 @@ function Record({navigation}: Props) {
     setRecordSecs(0);
     setLoading(true);
     audioToText(result, langMap[language]).then(res => {
-      setResText(res);
       textToAudio(res).then(audioUrl => {
+        setResText(res);
         setLoading(false);
         onStartPlay(audioUrl);
         setTranslationUrl(audioUrl);
@@ -118,11 +106,14 @@ function Record({navigation}: Props) {
     audioRecorderPlayer.removePlayBackListener();
   };
 
+  // todo allow copy text, share text, save text, save audio
+
   return (
     <Provider>
       <SafeAreaView
         style={{
           flex: 1,
+          backgroundColor: Colors.Mint,
         }}>
         <View style={{padding: 20}}>
           <View
@@ -153,7 +144,8 @@ function Record({navigation}: Props) {
               ))}
             </Menu>
           </View>
-          <Label.Medium style={{paddingHorizontal: 10, textAlign: 'center'}}>
+          <Label.Medium
+            style={{paddingHorizontal: 10, marginTop: 30, textAlign: 'center'}}>
             Press and hold to record
           </Label.Medium>
           <View>
@@ -193,20 +185,23 @@ function Record({navigation}: Props) {
           {currentPositionSec > 0 && currentDurationSec > 0 && (
             <>
               <Progress.Bar
+                color={Colors.Teal}
                 progress={currentPositionSec / currentDurationSec}
                 width={Dimensions.get('window').width - 50}
               />
-              <View style={{flexDirection: 'row', paddingTop: 5}}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  paddingTop: 5,
+                  marginHorizontal: 10,
+                  justifyContent: 'space-between',
+                }}>
                 <Icon
                   name="replay"
-                  color={Colors.LightLime}
+                  color={Colors.Navy}
                   onPress={() => onStartPlay(translationUrl)}
                 />
-                <Icon
-                  name="pause"
-                  color={Colors.LightLime}
-                  onPress={onPausePlay}
-                />
+                <Icon name="pause" color={Colors.Navy} onPress={onPausePlay} />
               </View>
             </>
           )}
@@ -214,7 +209,7 @@ function Record({navigation}: Props) {
             <AnimText
               text={resText}
               TextComp={Script.Medium}
-              style={{paddingHorizontal: 10}}
+              style={{paddingHorizontal: 10, lineHeight: 35}}
             />
           </View>
           {/* <Button onPress={onStartRecord}>Record</Button>

@@ -1,27 +1,33 @@
-if (__DEV__) {
-  import('./ReactotronConfig').then(() => console.log('Reactotron Configured'));
-}
-import React, {useMemo} from 'react';
-import {StatusBar, useColorScheme} from 'react-native';
-import {SafeAreaProvider} from 'react-native-safe-area-context';
+import React from 'react';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-import {Colors} from 'react-native/Libraries/NewAppScreen';
 import theme from './theme';
-import {ThemeProvider} from '@rneui/themed';
-import UserContext from './user/userContext';
-import Tabs from './screens/mainTabs';
+import { ThemeProvider } from '@rneui/themed';
+import { LangProvider } from './src/context/lang/langContext';
+import Tabs from './src/navigation/Tabs';
+import { Provider as PaperProvider } from 'react-native-paper';
+import Config from 'react-native-config';
+import { Label } from './src/atoms/Text';
+import { View } from 'react-native';
 
 function App(): JSX.Element {
-  const [user, setUser] = React.useState('admin');
-
+  if (!Config.OPENAI_KEY) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Label.Medium>Missing OPENAI KEY</Label.Medium>
+      </View>
+    );
+  }
   return (
-    <SafeAreaProvider>
-      <ThemeProvider theme={theme}>
-        <UserContext.Provider value={[user, setUser]}>
-          <Tabs />
-        </UserContext.Provider>
-      </ThemeProvider>
-    </SafeAreaProvider>
+    <PaperProvider>
+      <SafeAreaProvider>
+        <ThemeProvider theme={theme}>
+          <LangProvider>
+            <Tabs />
+          </LangProvider>
+        </ThemeProvider>
+      </SafeAreaProvider>
+    </PaperProvider>
   );
 }
 

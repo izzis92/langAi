@@ -1,14 +1,18 @@
 import axios from 'axios';
 import { Platform } from 'react-native';
 import RNFetchBlob from 'rn-fetch-blob';
+import { LangKey } from '../../src/context/lang/langContext';
+import { LangMap } from '../constants';
+import Config from 'react-native-config';
 
-const KEY = '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';
+// Secret key for OpenAI API
+const KEY = Config.OPENAI_KEY;
 
-export const audioToText = async (audio: any, lang: string) => {
+export const audioToText = async (path: any, lang: LangKey) => {
   const formData = new FormData();
   formData.append('file', {
     name: 'hello.m4a',
-    uri: Platform.OS === 'android' ? audio : audio.replace('file://', ''),
+    uri: Platform.OS === 'android' ? path : path.replace('file://', ''),
   });
   formData.append('model', 'whisper-1');
   formData.append(
@@ -34,7 +38,7 @@ export const audioToText = async (audio: any, lang: string) => {
     model: 'gpt-3.5-turbo',
     messages: [
       {
-        content: `translate the following to ${lang}: ${res.data.text}`,
+        content: `translate the following to ${LangMap[lang]}: ${res.data.text}`,
         role: 'system',
       },
     ],
@@ -52,7 +56,7 @@ export const audioToText = async (audio: any, lang: string) => {
   return res2.data.choices[0].message.content;
 };
 
-export const fetchExp = async (text?: string, lang?: string) => {
+export const fetchExp = async (text?: string, lang?: LangKey) => {
   if (!text) {
     return Promise.reject('No text provided');
   }
@@ -62,7 +66,9 @@ export const fetchExp = async (text?: string, lang?: string) => {
     messages: [
       {
         role: 'user',
-        content: `Break down the following message to smaller parts, and explain in ${lang}: "${text}".`,
+        content: `Break down the following message to smaller parts, and explain in ${
+          LangMap[lang || 'en']
+        }: "${text}".`,
       },
     ],
   };
@@ -78,11 +84,10 @@ export const fetchExp = async (text?: string, lang?: string) => {
     },
   );
 
-  console.log(res2.data.choices[0].message.content);
   return { id: res2.data.id, text: res2.data.choices[0].message.content };
 };
 
-export const loadConv = async (messages: any[], lang: string) => {
+export const loadConv = async (messages: any[], lang: LangKey) => {
   if (!messages || messages.length === 0) {
     return Promise.reject('No text provided');
   }
@@ -93,7 +98,7 @@ export const loadConv = async (messages: any[], lang: string) => {
     messages: [
       {
         role: 'system',
-        content: `Hi, I will be speaking to you in ${lang} so that you can learn`,
+        content: `Hi, I will be speaking to you in ${LangMap[lang]} so that you can learn`,
       },
       ...messages,
     ],

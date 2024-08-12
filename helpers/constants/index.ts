@@ -1,4 +1,4 @@
-export const langMap = {
+export const LangMap = {
   en: 'English',
   es: 'Spanish',
   fr: 'French',
